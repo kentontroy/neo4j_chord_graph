@@ -8,15 +8,19 @@ CALL apoc.merge.node(["Semitone", "Note", note], { name: note  }) YIELD node
 RETURN node
 
 MATCH (n:Semitone:Note:`C#`)
-SET n:Db, n.name = "`C#`", n.alias = "Db"
+SET n:Db, n.alias = "Db"
+
 MATCH (n:Semitone:Note:`D#`)
-SET n:Eb, n.name = "`D#`", n.alias = "Eb"
+SET n:Eb, n.alias = "Eb"
+
 MATCH (n:Semitone:Note:`F#`)
-SET n:Gb, n.name = "`F#`", n.alias = "Gb"
+SET n:Gb, n.alias = "Gb"
+
 MATCH (n:Semitone:Note:`G#`)
-SET n:Ab, n.name = "`G#`", n.alias = "Ab"
+SET n:Ab, n.alias = "Ab"
+
 MATCH (n:Semitone:Note:`A#`)
-SET n:Bb, n.name = "`A#`", n.alias = "Bb"
+SET n:Bb, n.alias = "Bb"
 ```
 ### Create a circularly linked list denoting a Minor 2nd interval relationship between the consecutive semitones
 ```
