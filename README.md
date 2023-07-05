@@ -18,6 +18,18 @@ SET n:Ab, n.name = "`G#`", n.alias = "Ab"
 MATCH (n:Semitone:Note:`A#`)
 SET n:Bb, n.name = "`A#`", n.alias = "Bb"
 ```
+### Create a circular link denoting a Minor2nd interval relationship between the consecutive semitones
+```
+UNWIND RANGE(0, 10) AS i
+WITH i, (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS notes
+    MATCH (s1:Semitone:Note { name: notes[i] }) 
+    MATCH (s2:Semitone:Note { name: notes[i+1] }) 
+    MERGE (s1)-[:Minor2nd]->(s2)
+
+MATCH (s1:Semitone:Note:B)
+MATCH (s2:Semitone:Note:C)
+MERGE (s1)-[:Minor2nd]->(s2)
+```
 
 ### Create the I chord for each Major Scale
 ```
