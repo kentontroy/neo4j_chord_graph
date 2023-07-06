@@ -127,14 +127,15 @@ RETURN s, t
 ### Create the I chord for each Major Scale
 ```
 MATCH (majScale:MajorScale)
-UNWIND (majScale.name) AS scale
+UNWIND (majScale) AS scale
 WITH scale
-  MATCH (s:MajorScale { name: scale })-[i:HAS_TONE { degree: 1 }]->(n:Semitone)
+  MATCH (n:Semitone { name: scale.root })
   MATCH (n)-[:Major3rd]->(third:Semitone)
   MATCH (n)-[:Perfect5th]->(fifth:Semitone)
   CALL apoc.merge.node(["Chord", "Triad", n.name], { name: n.name, notes: [n.name, third.name, fifth.name] }) YIELD node
   MERGE (node)-[:HAS_TONE { degree: 1 }]->(n)
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
-RETURN node AS chord, n AS root, third, fifth
+  MERGE (scale)-[:HAS_CHORD { degree: 1, name: "I" }]->(node)
+RETURN scale, node AS chord, n AS root, third, fifth
 ```
