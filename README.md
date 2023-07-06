@@ -105,6 +105,16 @@ SET s:Abmajor, s.alias = "Abmajor"
 MATCH (s:`A#major`)
 SET s:Bbmajor, s.alias = "Bbmajor"
 ```
+### Build relationships between the Notes and the Scales
+```
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+    MATCH (t:Semitone:Note { name: n})
+    MATCH (s:MajorScale { root: n})
+    MERGE (s)-[i:HAS_TONE]->(t)
+    SET i.degree = 0, i.instance = "Tonic"
+RETURN s, i, t
+```
 
 ### Create the I chord for each Major Scale
 ```
