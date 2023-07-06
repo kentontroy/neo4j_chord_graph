@@ -7,20 +7,11 @@ UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS note
 CALL apoc.merge.node(["Semitone", "Note", note], { name: note  }) YIELD node
 RETURN node
 
-MATCH (n:Semitone:Note:`C#`)
-SET n:Db, n.alias = "Db"
-
-MATCH (n:Semitone:Note:`D#`)
-SET n:Eb, n.alias = "Eb"
-
-MATCH (n:Semitone:Note:`F#`)
-SET n:Gb, n.alias = "Gb"
-
-MATCH (n:Semitone:Note:`G#`)
-SET n:Ab, n.alias = "Ab"
-
-MATCH (n:Semitone:Note:`A#`)
-SET n:Bb, n.alias = "Bb"
+MERGE (:Semitone:Note:`C#`:Db { alias: "Db" })
+MERGE (:Semitone:Note:`D#`:Eb { alias: "Eb" })
+MERGE (:Semitone:Note:`F#`:Gb { alias: "Gb" })
+MERGE (:Semitone:Note:`G#`:Ab { alias: "Ab" })
+MERGE (:Semitone:Note:`A#`:Bb { alias: "Bb" })
 ```
 ### Create a circularly linked list denoting a Minor2nd interval relationship between the consecutive semitones
 ```
