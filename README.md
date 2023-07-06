@@ -82,6 +82,29 @@ WITH n
     MATCH (s1)-[:Minor2nd*11]->(s2:Semitone)
     MERGE (s1)-[:Major7th]->(s2)
 ```
+### Create the Scale nodes
+```
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+    CALL apoc.merge.node(["Scale", "MajorScale", "Diatonic", "Heptatonic", (n + "major") ], 
+        { name: (n + "major"), root: n }) YIELD node
+RETURN node    
+
+MATCH (s:`C#major`)
+SET s:Dbmajor, s.alias = "Dbmajor"
+
+MATCH (s:`D#major`)
+SET s:Ebmajor, s.alias = "Ebmajor"
+
+MATCH (s:`F#major`)
+SET s:Gbmajor, s.alias = "Gbmajor"
+
+MATCH (s:`G#major`)
+SET s:Abmajor, s.alias = "Abmajor"
+
+MATCH (s:`A#major`)
+SET s:Bbmajor, s.alias = "Bbmajor"
+```
 
 ### Create the I chord for each Major Scale
 ```
