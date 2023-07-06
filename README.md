@@ -96,7 +96,7 @@ SET s:Abmajor, s.alias = "Abmajor"
 MATCH (s:`A#major`)
 SET s:Bbmajor, s.alias = "Bbmajor"
 ```
-### Build relationships between the Notes and the Scales
+### Build relationships between the Notes and the Major Scales
 ```
 UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
 WITH n
