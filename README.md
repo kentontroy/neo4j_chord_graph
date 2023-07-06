@@ -22,7 +22,7 @@ SET n:Ab, n.alias = "Ab"
 MATCH (n:Semitone:Note:`A#`)
 SET n:Bb, n.alias = "Bb"
 ```
-### Create a circularly linked list denoting a Minor 2nd interval relationship between the consecutive semitones
+### Create a circularly linked list denoting a Minor2nd interval relationship between the consecutive semitones
 ```
 UNWIND RANGE(0, 10) AS i
 WITH i, (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS notes
@@ -33,6 +33,54 @@ WITH i, (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS notes
 MATCH (s1:Semitone:Note:B)
 MATCH (s2:Semitone:Note:C)
 MERGE (s1)-[:Minor2nd]->(s2)
+```
+### Create more intervals to link the notes  - e.g. Major2nd, PerfectFifth, Minor7th, etc 
+```
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+    MATCH (s1:Semitone:Note)-[:Minor2nd*0]->(s2:Semitone)
+    WHERE s1.name = n
+    MERGE (s1)-[:Unison]->(s2)
+    
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*2]->(s2:Semitone)
+    MERGE (s1)-[:Major2nd]->(s2)
+    
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*3]->(s2:Semitone)
+    MERGE (s1)-[:Minor3rd]->(s2)
+    
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*4]->(s2:Semitone)
+    MERGE (s1)-[:Major3rd]->(s2)
+
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*5]->(s2:Semitone)
+    MERGE (s1)-[:Perfect4th]->(s2)
+    
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*6]->(s2:Semitone)
+    MERGE (s1)-[:Augmented4th]->(s2)
+
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*7]->(s2:Semitone)
+    MERGE (s1)-[:Perfect5th]->(s2)
+
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*8]->(s2:Semitone)
+    MERGE (s1)-[:Minor6th]->(s2)
+    
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*9]->(s2:Semitone)
+    MERGE (s1)-[:Major6th]->(s2)
+
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*10]->(s2:Semitone)
+    MERGE (s1)-[:Minor7th]->(s2)
+    
+    WITH s1 
+    MATCH (s1)-[:Minor2nd*11]->(s2:Semitone)
+    MERGE (s1)-[:Major7th]->(s2)
 ```
 
 ### Create the I chord for each Major Scale
