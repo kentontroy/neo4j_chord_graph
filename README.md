@@ -73,7 +73,7 @@ WITH n
     MATCH (s1)-[:Minor2nd*11]->(s2:Semitone)
     MERGE (s1)-[:Major7th]->(s2)
 ```
-### Create the Scale nodes
+### Create the Major Scale nodes
 ```
 UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
 WITH n
