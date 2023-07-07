@@ -124,7 +124,7 @@ WITH n
 RETURN s, t
 ```
 
-### Create the I chord for each Major Scale
+### Create the I Chord for each Major Scale
 ```
 MATCH (majScale:MajorScale)
 UNWIND (majScale) AS scale
@@ -139,7 +139,7 @@ WITH scale
   MERGE (scale)-[i:HAS_CHORD { degree: 1, name: "I" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
-### Create the ii chord for each Major Scale
+### Create the ii Chord for each Major Scale
 ```
 MATCH (majScale:MajorScale)
 UNWIND (majScale) AS scale
@@ -154,7 +154,7 @@ WITH scale
   MERGE (scale)-[i:HAS_CHORD { degree: 2, name: "ii" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
-### Create the iii chord for each Major Scale
+### Create the iii Chord for each Major Scale
 ```
 MATCH (majScale:MajorScale)
 UNWIND (majScale) AS scale
@@ -169,7 +169,7 @@ WITH scale
   MERGE (scale)-[i:HAS_CHORD { degree: 3, name: "iii" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
-### Create the IV chord for each Major Scale
+### Create the IV Chord for each Major Scale
 ```
 MATCH (majScale:MajorScale)
 UNWIND (majScale) AS scale
@@ -184,7 +184,7 @@ WITH scale
   MERGE (scale)-[i:HAS_CHORD { degree: 4, name: "IV" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
-### Create the V chord for each Major Scale
+### Create the V Chord for each Major Scale
 ```
 MATCH (majScale:MajorScale)
 UNWIND (majScale) AS scale
@@ -199,7 +199,7 @@ WITH scale
   MERGE (scale)-[i:HAS_CHORD { degree: 5, name: "V" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
-### Create the vi chord for each Major Scale
+### Create the vi Chord for each Major Scale
 ```
 MATCH (majScale:MajorScale)
 UNWIND (majScale) AS scale
@@ -212,5 +212,20 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 6, name: "vi" }]->(node)
+RETURN scale, i, node AS chord, n AS root, third, fifth
+```
+### Create the vii(dim) Chord for each Major Scale
+```
+MATCH (majScale:MajorScale)
+UNWIND (majScale) AS scale
+WITH scale
+  MATCH (scale)-[:HAS_TONE { degree: 7 }]->(n:Note) 
+  MATCH (n)-[:Minor3rd]->(third:Semitone)
+  MATCH (n)-[:Augmented4th]->(fifth:Semitone)
+  CALL apoc.merge.node(["Chord", "Triad", (n.name + "dim")], { name: (n.name + "dim"), notes: [n.name, third.name, fifth.name] }) YIELD node
+  MERGE (node)-[:HAS_TONE { degree: 1 }]->(n)
+  MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
+  MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
+  MERGE (scale)-[i:HAS_CHORD { degree: 7, name: "vii(dim)" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
