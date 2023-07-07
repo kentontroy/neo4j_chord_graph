@@ -154,3 +154,18 @@ WITH scale
   MERGE (scale)-[i:HAS_CHORD { degree: 2, name: "ii" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
+### Create the iii chord for each Major Scale
+```
+MATCH (majScale:MajorScale)
+UNWIND (majScale) AS scale
+WITH scale
+  MATCH (scale)-[:HAS_TONE { degree: 3 }]->(n:Note) 
+  MATCH (n)-[:Minor3rd]->(third:Semitone)
+  MATCH (n)-[:Perfect5th]->(fifth:Semitone)
+  CALL apoc.merge.node(["Chord", "Triad", (n.name + "m")], { name: (n.name + "m"), notes: [n.name, third.name, fifth.name] }) YIELD node
+  MERGE (node)-[:HAS_TONE { degree: 1 }]->(n)
+  MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
+  MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
+  MERGE (scale)-[i:HAS_CHORD { degree: 3, name: "iii" }]->(node)
+RETURN scale, i, node AS chord, n AS root, third, fifth
+```
