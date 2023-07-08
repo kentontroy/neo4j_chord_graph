@@ -9,11 +9,20 @@ RETURN node
 ```
 ### Create alias for flatted enharmonic tones
 ```
-MERGE (:Semitone:Note:`C#`:Db { alias: "Db" })
-MERGE (:Semitone:Note:`D#`:Eb { alias: "Eb" })
-MERGE (:Semitone:Note:`F#`:Gb { alias: "Gb" })
-MERGE (:Semitone:Note:`G#`:Ab { alias: "Ab" })
-MERGE (:Semitone:Note:`A#`:Bb { alias: "Bb" })
+MERGE (s:Semitone:Note:`C#`)
+SET s:Db, s.alias = "Db"
+
+MERGE (s:Semitone:Note:`D#`)
+SET s:Eb, s.alias = "Eb"
+
+MERGE (s:Semitone:Note:`F#`)
+SET s:Gb, s.alias = "Gb"
+
+MERGE (s:Semitone:Note:`G#`)
+SET s:Ab, s.alias = "Ab"
+
+MERGE (s:Semitone:Note:`A#`)
+SET s:Bb, s.alias = "Bb"
 ```
 ### Create a circularly linked list denoting a Minor2nd interval relationship between the consecutive semitones
 ```
@@ -245,4 +254,30 @@ SET s:Abminor, s.alias = "Abminor"
 
 MATCH (s:`A#minor`)
 SET s:Bbminor, s.alias = "Bbminor"
+```
+### Build relationships between the Notes and the Minor Scales
+```
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+  MATCH (t:Semitone:Note { name: n })
+  MATCH (s:NaturalMinorScale { root: n })
+  MERGE (s)-[:HAS_TONE { degree: 1 }]->(t)
+  WITH t, s
+    MATCH (t)-[:Major2nd]->(next:Semitone)
+    MERGE (s)-[:HAS_TONE { degree: 2 }]->(next)
+  WITH t, s
+    MATCH (t)-[:Minor3rd]->(next:Semitone)
+    MERGE (s)-[:HAS_TONE { degree: 3 }]->(next)
+  WITH t, s
+    MATCH (t)-[:Perfect4th]->(next:Semitone)
+    MERGE (s)-[:HAS_TONE { degree: 4 }]->(next)
+  WITH t, s
+    MATCH (t)-[:Perfect5th]->(next:Semitone)
+    MERGE (s)-[:HAS_TONE { degree: 5 }]->(next)
+  WITH t, s
+    MATCH (t)-[:Minor6th]->(next:Semitone)
+    MERGE (s)-[:HAS_TONE { degree: 6 }]->(next)
+  WITH t, s
+    MATCH (t)-[:Minor7th]->(next:Semitone)
+    MERGE (s)-[:HAS_TONE { degree: 7 }]->(next)
 ```
