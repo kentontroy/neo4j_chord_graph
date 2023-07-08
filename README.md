@@ -6,7 +6,9 @@ A knowledge graph for relating notes to intervals to scales to chords to appeara
 UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS note
 CALL apoc.merge.node(["Semitone", "Note", note], { name: note  }) YIELD node
 RETURN node
-
+```
+### Create alias for flatted enharmonic tones
+```
 MERGE (:Semitone:Note:`C#`:Db { alias: "Db" })
 MERGE (:Semitone:Note:`D#`:Eb { alias: "Eb" })
 MERGE (:Semitone:Note:`F#`:Gb { alias: "Gb" })
@@ -121,7 +123,6 @@ WITH n
     WITH t, s
         MATCH (t)-[:Major7th]->(next:Semitone)
         MERGE (s)-[:HAS_TONE { degree: 7, instance: "Leading Tone" }]->(next)
-RETURN s, t
 ```
 
 ### Create the I Chord for each Major Scale
@@ -137,7 +138,6 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 1, name: "I" }]->(node)
-RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
 ### Create the ii Chord for each Major Scale
 ```
@@ -152,7 +152,6 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 2, name: "ii" }]->(node)
-RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
 ### Create the iii Chord for each Major Scale
 ```
@@ -167,7 +166,6 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 3, name: "iii" }]->(node)
-RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
 ### Create the IV Chord for each Major Scale
 ```
@@ -182,7 +180,6 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 4, name: "IV" }]->(node)
-RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
 ### Create the V Chord for each Major Scale
 ```
@@ -197,7 +194,6 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 5, name: "V" }]->(node)
-RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
 ### Create the vi Chord for each Major Scale
 ```
@@ -212,7 +208,6 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 6, name: "vi" }]->(node)
-RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
 ### Create the vii(dim) Chord for each Major Scale
 ```
@@ -227,5 +222,4 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 7, name: "vii(dim)" }]->(node)
-RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
