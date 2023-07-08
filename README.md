@@ -223,3 +223,26 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 7, name: "vii(dim)" }]->(node)
 ```
+### Create the Minor Scale nodes
+```
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+  CALL apoc.merge.node(["Scale", "MinorScale", "NaturalMinorScale", "Diatonic", "Heptatonic", (n + "minor") ], 
+        { name: (n + "minor"), root: n }) YIELD node
+RETURN node
+
+MATCH (s:`C#minor`)
+SET s:Dbminor, s.alias = "Dbminor"
+
+MATCH (s:`D#minor`)
+SET s:Ebminor, s.alias = "Ebminor"
+
+MATCH (s:`F#minor`)
+SET s:Gbminor, s.alias = "Gbminor"
+
+MATCH (s:`G#minor`)
+SET s:Abminor, s.alias = "Abminor"
+
+MATCH (s:`A#minor`)
+SET s:Bbminor, s.alias = "Bbminor"
+```
