@@ -380,7 +380,7 @@ WITH scale
   MERGE (scale)-[i:HAS_CHORD { degree: 6, name: "bVI" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
-### Create the bVI Chord for each Minor Scale
+### Create the bVII Chord for each Minor Scale
 ```
 MATCH (minScale:NaturalMinorScale)
 UNWIND (minScale) AS scale
