@@ -290,3 +290,17 @@ WITH majorScale
   MERGE (minorScale)-[:IS_RELATIVE_MINOR_OF]->(majorScale)
   MERGE (majorScale)-[:IS_RELATIVE_MAJOR_OF]->(minorScale)
 ```
+### Create the i Chord for each Minor Scale
+```
+MATCH (minScale:NaturalMinorScale)
+UNWIND (minScale) AS scale
+WITH scale
+  MATCH (n:Semitone { name: scale.root })
+  MATCH (n)-[:Minor3rd]->(third:Semitone)
+  MATCH (n)-[:Perfect5th]->(fifth:Semitone)
+  CALL apoc.merge.node(["Chord", "Triad", (n.name + "m")], { name: (n.name + "m"), notes: [n.name, third.name, fifth.name] }) YIELD node
+  MERGE (node)-[:HAS_TONE { degree: 1 }]->(n)
+  MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
+  MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
+  MERGE (scale)-[i:HAS_CHORD { degree: 1, name: "i" }]->(node)
+```
