@@ -303,4 +303,35 @@ WITH scale
   MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
   MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
   MERGE (scale)-[i:HAS_CHORD { degree: 1, name: "i" }]->(node)
+RETURN scale, i, node AS chord, n AS root, third, fifth
+```
+### Create the ii(dim) Chord for each Minor Scale
+```
+MATCH (minScale:NaturalMinorScale)
+UNWIND (minScale) AS scale
+WITH scale
+  MATCH (scale)-[:HAS_TONE { degree: 2 }]->(n:Note) 
+  MATCH (n)-[:Minor3rd]->(third:Semitone)
+  MATCH (n)-[:Augmented4th]->(fifth:Semitone)
+  CALL apoc.merge.node(["Chord", "Triad", (n.name + "dim")], { name: (n.name + "dim"), notes: [n.name, third.name, fifth.name] }) YIELD node
+  MERGE (node)-[:HAS_TONE { degree: 1 }]->(n)
+  MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
+  MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
+  MERGE (scale)-[i:HAS_CHORD { degree: 2, name: "ii(dim)" }]->(node)
+RETURN scale, i, node AS chord, n AS root, third, fifth
+```
+### Create the bIII Chord for each Minor Scale
+```
+MATCH (minScale:NaturalMinorScale)
+UNWIND (minScale) AS scale
+WITH scale
+  MATCH (scale)-[:HAS_TONE { degree: 3 }]->(n:Note) 
+  MATCH (n)-[:Major3rd]->(third:Semitone)
+  MATCH (n)-[:Perfect5th]->(fifth:Semitone)
+  CALL apoc.merge.node(["Chord", "Triad", n.name], { name: n.name, notes: [n.name, third.name, fifth.name] }) YIELD node
+  MERGE (node)-[:HAS_TONE { degree: 1 }]->(n)
+  MERGE (node)-[:HAS_TONE { degree: 3 }]->(third)
+  MERGE (node)-[:HAS_TONE { degree: 5 }]->(fifth)
+  MERGE (scale)-[i:HAS_CHORD { degree: 3, name: "bIII" }]->(node)
+RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
