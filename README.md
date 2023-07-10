@@ -281,3 +281,12 @@ WITH n
     MATCH (t)-[:Minor7th]->(next:Semitone)
     MERGE (s)-[:HAS_TONE { degree: 7 }]->(next)
 ```
+### Relate the scales to each other via Relative Majors and Relative Minors
+```
+MATCH (majorScale:MajorScale)
+WITH majorScale
+  MATCH (n:Note { name: majorScale.root })-[:Major6th]->(relativeMinor:Note)
+  MATCH (minorScale:NaturalMinorScale { root: relativeMinor.name })
+  MERGE (minorScale)-[:IS_RELATIVE_MINOR_OF]->(majorScale)
+  MERGE (majorScale)-[:IS_RELATIVE_MAJOR_OF]->(minorScale)
+```
