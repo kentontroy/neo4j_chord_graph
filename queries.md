@@ -34,7 +34,7 @@ RETURN n AS note
 │(:Semitone:C:Note {name: "C"})                 │
 └───────────────────────────────────────────────┘
 ```
-### Get a Cm7 CHord using flattened, enharmonic alieas
+### Get a Cm7 Chord using flattened, enharmonic alieas
 ```
 MATCH (root:C)-[:Minor3rd]->(third:Note) 
 MATCH (third)-[:Minor3rd]->(fifth:Note) 
