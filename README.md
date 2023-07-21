@@ -395,6 +395,52 @@ WITH scale
   MERGE (scale)-[i:HAS_CHORD { degree: 7, name: "bVII" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
+### Create Seventh Chords on top of the Diminished Triads present
+```
+With any diminished triad, there are three types of 7th degree additions
+For example, using C as the root note, you have: 
+1. Cdim(major7)
+2. Cdim7
+3. Cm7(b5)
+
+Note: Cm7(b5), a half-diminished seventh chord uses minor notation with an added b5
+
+--- Create dim(major7) ---
+
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+  MATCH (root:Note { name: n })
+  MATCH (root)-[:Minor3rd]->(third:Note) 
+  MATCH (third)-[:Minor3rd]->(fifth:Note) 
+  MATCH (fifth)-[:Perfect4th]->(seventh:Note) 
+  CALL apoc.merge.node(["Chord", "Seventh", (root.name + "dim(major7)")], 
+  { name: root.name + "dim(major7)", notes: [root.name, third.name, fifth.name, seventh.name] }) YIELD node
+RETURN node
+
+--- Create dim7 ---
+
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+  MATCH (root:Note { name: n })
+  MATCH (root)-[:Minor3rd]->(third:Note) 
+  MATCH (third)-[:Minor3rd]->(fifth:Note) 
+  MATCH (fifth)-[:Minor3rd]->(seventh:Note) 
+  CALL apoc.merge.node(["Chord", "Seventh", (root.name + "dim7")], 
+  { name: root.name + "dim7", notes: [root.name, third.name, fifth.name, seventh.name] }) YIELD node
+RETURN node
+
+--- Create m7(b5) ---
+
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+  MATCH (root:Note { name: n })
+  MATCH (root)-[:Minor3rd]->(third:Note) 
+  MATCH (third)-[:Minor3rd]->(fifth:Note) 
+  MATCH (fifth)-[:Major3rd]->(seventh:Note) 
+  CALL apoc.merge.node(["Chord", "Seventh", (root.name + "m7(b5)")], 
+  { name: root.name + "m7(b5)", notes: [root.name, third.name, fifth.name, seventh.name] }) YIELD node
+RETURN node
+```
 ### Re-label the Chords with enharmonic aliases
 ```
 MATCH (c:Chord) 
@@ -452,49 +498,4 @@ WITH c, apoc.text.replace(c.name, "A#", "Bb") AS alias
   SET c.alias = alias
 RETURN c
 ```
-### Create Seventh Chords on top of the Diminished Triads present
-```
-With any diminished triad, there are three types of 7th degree additions
-For example, using C as the root note, you have: 
-1. Cdim(major7)
-2. Cdim7
-3. Cm7(b5)
 
-Note: Cm7(b5), a half-diminished seventh chord uses minor notation with an added b5
-
---- Create dim(major7) ---
-
-UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
-WITH n
-  MATCH (root:Note { name: n })
-  MATCH (root)-[:Minor3rd]->(third:Note) 
-  MATCH (third)-[:Minor3rd]->(fifth:Note) 
-  MATCH (fifth)-[:Perfect4th]->(seventh:Note) 
-  CALL apoc.merge.node(["Chord", "Seventh", (root.name + "dim(major7)")], 
-  { name: root.name + "dim(major7)", notes: [root.name, third.name, fifth.name, seventh.name] }) YIELD node
-RETURN node
-
---- Create dim7 ---
-
-UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
-WITH n
-  MATCH (root:Note { name: n })
-  MATCH (root)-[:Minor3rd]->(third:Note) 
-  MATCH (third)-[:Minor3rd]->(fifth:Note) 
-  MATCH (fifth)-[:Minor3rd]->(seventh:Note) 
-  CALL apoc.merge.node(["Chord", "Seventh", (root.name + "dim7")], 
-  { name: root.name + "dim7", notes: [root.name, third.name, fifth.name, seventh.name] }) YIELD node
-RETURN node
-
---- Create m7(b5) ---
-
-UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
-WITH n
-  MATCH (root:Note { name: n })
-  MATCH (root)-[:Minor3rd]->(third:Note) 
-  MATCH (third)-[:Minor3rd]->(fifth:Note) 
-  MATCH (fifth)-[:Major3rd]->(seventh:Note) 
-  CALL apoc.merge.node(["Chord", "Seventh", (root.name + "m7(b5)")], 
-  { name: root.name + "m7(b5)", notes: [root.name, third.name, fifth.name, seventh.name] }) YIELD node
-RETURN node
-```
