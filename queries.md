@@ -50,3 +50,10 @@ RETURN coalesce(root.alias, root.name) AS root,
 │"C" │"Eb" │"Gb" │"Bb"   │
 └────┴─────┴─────┴───────┘
 ```
+### Get a I, IV, V chord from Dmajor
+```
+MATCH (s:Dmajor)-[i:HAS_CHORD]->(c:Chord)
+WHERE i.name IN ["I", "IV", "V"]
+RETURN i.name, c 
+ORDER BY i.name
+```
