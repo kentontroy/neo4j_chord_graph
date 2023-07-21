@@ -57,3 +57,12 @@ WHERE i.name IN ["I", "IV", "V"]
 RETURN i.name, c 
 ORDER BY i.name
 ```
+### Get a random I, IV, V chord
+```
+WITH (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+MATCH (s:MajorScale) WHERE s.root = n[toInteger(rand() * 12)] 
+MATCH (s)-[i:HAS_CHORD]->(c:Chord)
+WHERE i.name IN ["I", "IV", "V"]
+RETURN s.root, i.name, c 
+ORDER BY i.name
+```
