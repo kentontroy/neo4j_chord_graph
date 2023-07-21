@@ -462,7 +462,7 @@ For example, using C as the root note, you have:
 
 Note: Cm7(b5), a half-diminished seventh chord uses minor notation with an added b5
 
-#### Create dim(major7)
+--- Create dim(major7) ---
 
 UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
 WITH n
@@ -474,4 +474,27 @@ WITH n
   { name: root.name + "dim(major7)", notes: [root.name, third.name, fifth.name, seventh.name] }) YIELD node
 RETURN node
 
+--- Create dim7 ---
+
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+  MATCH (root:Note { name: n })
+  MATCH (root)-[:Minor3rd]->(third:Note) 
+  MATCH (third)-[:Minor3rd]->(fifth:Note) 
+  MATCH (fifth)-[:Minor3rd]->(seventh:Note) 
+  CALL apoc.merge.node(["Chord", "Seventh", (root.name + "dim7")], 
+  { name: root.name + "dim7", notes: [root.name, third.name, fifth.name, seventh.name] }) YIELD node
+RETURN node
+
+--- Create m7(b5) ---
+
+UNWIND (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
+WITH n
+  MATCH (root:Note { name: n })
+  MATCH (root)-[:Minor3rd]->(third:Note) 
+  MATCH (third)-[:Minor3rd]->(fifth:Note) 
+  MATCH (fifth)-[:Major3rd]->(seventh:Note) 
+  CALL apoc.merge.node(["Chord", "Seventh", (root.name + "m7(b5)")], 
+  { name: root.name + "m7(b5)", notes: [root.name, third.name, fifth.name, seventh.name] }) YIELD node
+RETURN node
 ```
