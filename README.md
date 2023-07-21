@@ -395,4 +395,61 @@ WITH scale
   MERGE (scale)-[i:HAS_CHORD { degree: 7, name: "bVII" }]->(node)
 RETURN scale, i, node AS chord, n AS root, third, fifth
 ```
+### Re-label the Chords with enharmonic aliases
+```
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "C#" 
+CALL apoc.create.addLabels(id(c), [apoc.text.replace(c.name, "C#", "Db")]) YIELD node 
+RETURN node
+
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "C#" 
+WITH c, apoc.text.replace(c.name, "C#", "Db") AS alias
+  SET c.alias = alias
+RETURN c
+
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "D#" 
+CALL apoc.create.addLabels(id(c), [apoc.text.replace(c.name, "D#", "Eb")]) YIELD node 
+RETURN node
+
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "D#" 
+WITH c, apoc.text.replace(c.name, "D#", "Eb") AS alias
+  SET c.alias = alias
+RETURN c
+
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "F#" 
+CALL apoc.create.addLabels(id(c), [apoc.text.replace(c.name, "F#", "Gb")]) YIELD node 
+RETURN node
+
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "F#" 
+WITH c, apoc.text.replace(c.name, "F#", "Gb") AS alias
+  SET c.alias = alias
+RETURN c
+
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "G#" 
+CALL apoc.create.addLabels(id(c), [apoc.text.replace(c.name, "G#", "Ab")]) YIELD node 
+RETURN node
+
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "G#" 
+WITH c, apoc.text.replace(c.name, "G#", "Ab") AS alias
+  SET c.alias = alias
+RETURN c
+
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "A#" 
+CALL apoc.create.addLabels(id(c), [apoc.text.replace(c.name, "A#", "Bb")]) YIELD node 
+RETURN node
+
+MATCH (c:Chord) 
+WHERE c.name CONTAINS "A#" 
+WITH c, apoc.text.replace(c.name, "A#", "Bb") AS alias
+  SET c.alias = alias
+RETURN c
+```
 
