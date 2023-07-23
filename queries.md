@@ -57,7 +57,7 @@ WHERE i.name IN ["I", "IV", "V"]
 RETURN i.name, c 
 ORDER BY i.name
 ```
-### Get a random I, IV, V chord
+### Get a I, IV, V chord by sampling a random key center
 ```
 WITH (["C","C#","D","D#","E","F","F#","G", "G#","A", "A#","B"]) AS n
 MATCH (s:MajorScale) WHERE s.root = n[toInteger(rand() * 12)] 
